@@ -1,0 +1,7 @@
+{
+    "name": "MindyMDT Tournament Plugin (Minimal)",
+    "author": "neko-chan",
+    "main": "com.mdt.MintyMDTPlugin",
+    "description": "meow~",
+    "version": 1.0
+}
