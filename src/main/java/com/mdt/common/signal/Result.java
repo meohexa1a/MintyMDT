@@ -34,7 +34,7 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default Result<T, F> recover(Function<F, T> fn) {
+    default Result<T, F> recover(Function<F, @NotNull T> fn) {
         return switch (this) {
             case Success<T, F> s -> s;
             case Empty<T, F> e -> e;
@@ -42,7 +42,7 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default <G extends Failure> Result<T, G> mapError(Function<F, G> fn) {
+    default <G extends Failure> Result<T, G> mapError(Function<F, @NotNull G> fn) {
         return switch (this) {
             case Success<T, F> s -> new Success<>(s.value());
             case Empty<T, F> ignore -> new Empty<>();
@@ -50,7 +50,7 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default <U> Result<U, F> flatMap(Function<T, Result<U, F>> fn) {
+    default <U> Result<U, F> flatMap(Function<T, @NotNull Result<U, F>> fn) {
         return switch (this) {
             case Success<T, F> s -> fn.apply(s.value());
             case Empty<T, F> ignore -> new Empty<>();
@@ -58,7 +58,7 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default Result<T, F> recoverWith(Function<F, Result<T, F>> fn) {
+    default Result<T, F> recoverWith(Function<F, @NotNull Result<T, F>> fn) {
         return switch (this) {
             case Success<T, F> s -> s;
             case Empty<T, F> e -> e;
@@ -66,7 +66,7 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default <G extends Failure> Result<T, G> flatMapError(Function<F, Result<T, G>> fn) {
+    default <G extends Failure> Result<T, G> flatMapError(Function<F, @NotNull Result<T, G>> fn) {
         return switch (this) {
             case Success<T, F> s -> new Success<>(s.value());
             case Empty<T, F> ignore -> new Empty<>();
@@ -76,7 +76,7 @@ public sealed interface Result<T, F extends Failure> {
 
     // !-----------------------------------------------!
 
-    default SuccessStatus<T, F> ensureSuccess(Function<F, T> fn) {
+    default SuccessStatus<T, F> ensureSuccess(Function<F, @NotNull T> fn) {
         return switch (this) {
             case Success<T, F> s -> s;
             case Empty<T, F> e -> e;
@@ -84,7 +84,10 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default <U> Success<U, F> foldToSuccess(Function<T, U> onSuccess, Function<F, U> onError, Supplier<U> onEmpty) {
+    default <U> Success<U, F> foldToSuccess(
+            Function<T, @NotNull U> onSuccess,
+            Function<F, @NotNull U> onError,
+            Supplier<@NotNull U> onEmpty) {
         return switch (this) {
             case Success<T, F> s -> new Success<>(onSuccess.apply(s.value()));
             case Error<T, F> e -> new Success<>(onError.apply(e.failure()));
@@ -94,7 +97,10 @@ public sealed interface Result<T, F extends Failure> {
 
     // !-----------------------------------------------!
 
-    default <R> R fold(Function<T, R> onSuccess, Function<F, R> onError, Supplier<R> onEmpty) {
+    default <R> R fold(
+            Function<T, @NotNull R> onSuccess,
+            Function<F, @NotNull R> onError,
+            Supplier<@NotNull R> onEmpty) {
         return switch (this) {
             case Success<T, F> s -> onSuccess.apply(s.value());
             case Error<T, F> e -> onError.apply(e.failure());
@@ -130,7 +136,7 @@ public sealed interface Result<T, F extends Failure> {
     // !-----------------------------------------------!
 
     sealed interface SuccessStatus<T, F extends Failure> permits Success, Empty {
-        // TODO: Map to Success & Final if nedded
+        // TODO: Map to Success & Final if needed
     }
 
     record Success<T, F extends Failure>(@NotNull T value) implements Result<T, F>, SuccessStatus<T, F> {

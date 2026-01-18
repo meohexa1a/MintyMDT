@@ -10,6 +10,7 @@ import com.mdt.common.type.Pair;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,15 +21,15 @@ import java.util.function.Consumer;
 
 @Slf4j
 @Singleton
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public final class MenuService {
     private final int menuId = Menus.registerMenu(this::handleMenuSelection);
     private final int inputId = Menus.registerTextInput(this::handleTextInput);
 
-    private final Cache<@NotNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption =
-            Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
-    private final Cache<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput =
-            Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+    private final Cache<@NotNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption = Caffeine
+            .newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+    private final Cache<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput = Caffeine
+            .newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
 
     // !----------------------------------------------------------------!
 
@@ -39,10 +40,11 @@ public final class MenuService {
         Call.followUpMenu(player.con, menuId, menuOption.title(), menuOption.message(), menuOption.options());
     }
 
-    public void showInput(@NotNull Player player,@NotNull MenuInput menuInput) {
+    public void showInput(@NotNull Player player, @NotNull MenuInput menuInput) {
         showedMenuInput.put(player.uuid(), Pair.of(menuInput.action(), menuInput.userCloseAction()));
 
-        Call.textInput(player.con, inputId, menuInput.title(), menuInput.message(), 1024, menuInput.holder(), menuInput.isNumber());
+        Call.textInput(player.con, inputId, menuInput.title(), menuInput.message(), 1024, menuInput.holder(),
+                menuInput.isNumber());
     }
 
     // !----------------------------------------------------------------!
@@ -57,9 +59,12 @@ public final class MenuService {
         }
 
         try {
-            if (option < 0) menuOption.second().accept(player); // userCloseAction
-            else if (option < menuOption.first().size()) menuOption.first().get(option).accept(player);
-            else log.warn("Invalid menu selection by player: {}, option: {}", player.name, option);
+            if (option < 0)
+                menuOption.second().accept(player); // userCloseAction
+            else if (option < menuOption.first().size())
+                menuOption.first().get(option).accept(player);
+            else
+                log.warn("Invalid menu selection by player: {}, option: {}", player.name, option);
         } catch (Exception e) {
             log.error("Error executing menu action for player: {}, option: {}", player.name, option, e);
         }
@@ -73,8 +78,10 @@ public final class MenuService {
         }
 
         try {
-            if (text == null) menuInput.second().accept(player); // userCloseAction
-            else menuInput.first().accept(player, text);
+            if (text == null)
+                menuInput.second().accept(player); // userCloseAction
+            else
+                menuInput.first().accept(player, text);
         } catch (Exception e) {
             log.error("Error executing text input action for player: {}, inputId: {}", player.name, inputId, e);
         }

@@ -8,12 +8,14 @@ import java.util.*;
 import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Singleton
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public final class PopupRegisterService {
     private final Map<String, List<PopupProvider>> registered = new HashMap<>();
 

@@ -1,9 +1,10 @@
 package com.mdt.mindustry.popup;
 
 import arc.util.Align;
+import mindustry.gen.Player;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import mindustry.gen.Player;
 
 @Getter
 @RequiredArgsConstructor
