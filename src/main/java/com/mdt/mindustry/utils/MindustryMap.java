@@ -1,12 +1,12 @@
 package com.mdt.mindustry.utils;
 
-import jakarta.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import mindustry.Vars;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.InputStream;
 import java.util.UUID;
