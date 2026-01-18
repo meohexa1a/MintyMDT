@@ -1,6 +1,6 @@
 package com.mdt;
 
-import com.mdt.di.Prototype;
+import com.mdt.common.annotation.Prototype;
 import arc.util.CommandHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,19 +19,23 @@ public final class MintyMDTPlugin extends Plugin {
     private static @Getter Feather feather;
     private volatile boolean isStarted = false;
 
+    // !--------------------------------------------------------!
+
     @Override
     public void registerServerCommands(CommandHandler handler) {
         MintyMDTPlugin.serverHandler = handler;
-        init();
+        init_mdt();
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
         MintyMDTPlugin.clientHandler = handler;
-        init();
+        init_mdt();
     }
 
-    public synchronized void init() {
+    // !--------------------------------------------------------!
+
+    private synchronized void init_mdt() {
         if (isStarted || serverHandler == null || clientHandler == null) return;
         this.isStarted = true;
 
@@ -47,7 +51,8 @@ public final class MintyMDTPlugin extends Plugin {
             System.exit(-1);
         }
 
-        log.info("Successfully initialized");
+        log.info("MintyMDT Plugin Framework - v3.0");
+        log.info("All system normal.");
     }
 
     private Set<Class<?>> scanAnnotatedClasses() {

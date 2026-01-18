@@ -1,4 +1,4 @@
-package com.mdt.di;
+package com.mdt.common.annotation;
 
 import java.lang.annotation.*;
 
