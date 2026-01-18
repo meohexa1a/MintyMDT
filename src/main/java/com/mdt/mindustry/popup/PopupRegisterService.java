@@ -1,10 +1,9 @@
 package com.mdt.mindustry.popup;
 
 import javax.annotation.Nonnull;
-import mindustry.gen.Call;
-
-import io.micronaut.scheduling.annotation.Scheduled;
 import javax.inject.Singleton;
+import arc.util.Timer;
+import mindustry.gen.Call;
 import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +19,11 @@ public final class PopupRegisterService {
 
     // !----------------------------------------------------------------!
 
-    @Scheduled(cron = "*/1 * * * * *")
-    public void refresh() {
-        arc.Core.app.post(this::applyProviders);
+    {
+        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 5000, 1000);
     }
+
+    // !----------------------------------------------------------------!
 
     @Locked.Write
     public void register(@Nonnull String group, @Nonnull Set<PopupProvider> providers) {
