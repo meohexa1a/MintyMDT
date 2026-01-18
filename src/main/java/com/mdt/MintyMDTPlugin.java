@@ -2,28 +2,34 @@ package com.mdt;
 
 import mindustry.mod.Plugin;
 import org.codejargon.feather.Feather;
+
+import arc.util.CommandHandler;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class MintyMDTPlugin extends Plugin {
-    private final Feather feather;
+    private static @Getter CommandHandler serverHandler, clientHandler = null;
+    private volatile boolean isStarted = false;
 
-    public MintyMDTPlugin() {
-        // Khởi tạo Feather DI với các module cần thiết
-        // Ở đây chúng ta pass 'this' vào để có thể inject chính plugin này nếu cần
-        this.feather = Feather.with(this);
-        log.info("MintyMDTPlugin initialized with Feather DI.");
+    // !----------------------------------------------------------------!
+
+    @Override
+    public void registerServerCommands(CommandHandler handler) {
+        MintyMDTPlugin.serverHandler = handler;
+        init();
     }
 
     @Override
-    public void init() {
-        log.info("MintyMDTPlugin loaded.");
+    public void registerClientCommands(CommandHandler handler) {
+        MintyMDTPlugin.clientHandler = handler;
+        init();
     }
 
-    /**
-     * Helper method để lấy instance từ DI container
-     */
-    public <T> T getInstance(Class<T> clazz) {
-        return feather.instance(clazz);
+    public synchronized void init() {
+        if (isStarted || serverHandler == null || clientHandler == null) return;
+        this.isStarted = true;
+
+        
     }
 }
