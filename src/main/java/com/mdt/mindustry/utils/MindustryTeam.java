@@ -1,10 +1,10 @@
 package com.mdt.mindustry.utils;
 
 import arc.struct.Seq;
-import lombok.experimental.UtilityClass;
 import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.game.Teams;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class MindustryTeam {

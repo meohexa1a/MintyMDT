@@ -1,75 +1,65 @@
 package com.mdt;
 
+import com.mdt.common.annotation.Prototype;
 import arc.util.CommandHandler;
-import mindustry.mod.Plugin;
-
-import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.annotation.Bean;
-import io.micronaut.context.annotation.Factory;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import mindustry.mod.Plugin;
+import org.codejargon.feather.Feather;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+
+import javax.inject.Singleton;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 public final class MintyMDTPlugin extends Plugin {
     private static @Getter CommandHandler serverHandler, clientHandler = null;
-    private static @Getter ApplicationContext context = null;
-    private static volatile boolean isStarted = false;
+    private static @Getter Feather feather;
+    private volatile boolean isStarted = false;
 
-    // !----------------------------------------------------------------!
+    // !--------------------------------------------------------!
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
         MintyMDTPlugin.serverHandler = handler;
-        init();
+        initMintyMDT();
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
         MintyMDTPlugin.clientHandler = handler;
-        init();
+        initMintyMDT();
     }
 
-    public synchronized void init() {
+    // !--------------------------------------------------------!
+
+    private synchronized void initMintyMDT() {
         if (isStarted || serverHandler == null || clientHandler == null) return;
-        MintyMDTPlugin.isStarted = true;
-
-        log.info("<!-- MintyMDT Plugin Framework --!>");
+        this.isStarted = true;
 
         try {
-            MintyMDTPlugin.context = startContext();
+            MintyMDTPlugin.feather = Feather.with(new HashSet<>() {{
+                addAll(scanAnnotatedClasses());
+
+                add(serverHandler);
+                add(clientHandler);
+            }});
         } catch (Exception e) {
-            log.error("Failed to initialize Micronaut context. Server inactive, please manual shutdown!", e);
+            log.error("Failed to initialize. Exit application", e);
+            System.exit(-1);
         }
+
+        log.info("MintyMDT Plugin Framework - v3.0");
     }
 
-    // !----------------------------------------------------------------!
+    private Set<Class<?>> scanAnnotatedClasses() {
+        return new HashSet<>() {{
+            var reflections = new Reflections("com.mdt", Scanners.TypesAnnotated);
 
-    private ApplicationContext startContext() {
-        try {
-            log.info("Attempting to start Micronaut with AOT metadata...");
-
-            return ApplicationContext.builder()
-                    .eagerInitSingletons(true)
-                    .start();
-        } catch (Exception aotFailed) {
-            log.warn("AOT context not found, falling back to runtime scanning...");
-
-            return ApplicationContext.builder()
-                    .eagerInitSingletons(true)
-                    .packages("com.mdt")
-                    .start();
-        }
-    }
-
-    // !----------------------------------------------------------------!
-
-    @Factory
-    public static class MintyMDT {
-
-        @Bean
-        ApplicationContext applicationContext() {
-            return MintyMDTPlugin.getContext();
-        }
+            addAll(reflections.getTypesAnnotatedWith(Prototype.class));
+            addAll(reflections.getTypesAnnotatedWith(Singleton.class));
+        }};
     }
 }

@@ -1,21 +1,21 @@
 package com.mdt.mindustry.utils;
 
 import arc.files.Fi;
-import com.mdt.common.shared.signal.Result;
-import com.mdt.common.shared.signal.Unit;
+import com.mdt.common.signal.Result;
+import com.mdt.common.signal.Unit;
 import com.mdt.mindustry.utils.exception.WorldCaptureException;
 import com.mdt.mindustry.utils.exception.WorldLoadException;
-import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import mindustry.Vars;
 import mindustry.io.SaveIO;
 import mindustry.maps.Map;
 import mindustry.net.WorldReloader;
+import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class MindustryWorld {
 
-    public static Result<Unit, WorldCaptureException> captureSnapshot(@NonNull Fi file) {
+    public static Result<Unit, WorldCaptureException> captureSnapshot(@NotNull Fi file) {
         if (Vars.state.isMenu())
             return Result.error(new WorldCaptureException.WorldClosedException());
 
@@ -32,20 +32,14 @@ public class MindustryWorld {
 
     // !----------------------------------------------------------------!
 
-    public static Result<Unit, WorldLoadException> loadMap(Map map) {
-        if (map == null)
-            return Result.error(new WorldLoadException.InvalidInputException("Map is null"));
-
+    public static Result<Unit, WorldLoadException> loadMap(@NotNull Map map) {
         if (!SaveIO.isSaveValid(map.file))
             return Result.error(new WorldLoadException.InvalidInputException("Invalid map: " + map.file.name()));
 
         return doLoad(() -> Vars.world.loadMap(map));
     }
 
-    public static Result<Unit, WorldLoadException> loadFile(Fi file) {
-        if (file == null)
-            return Result.error(new WorldLoadException.InvalidInputException("File is null"));
-
+    public static Result<Unit, WorldLoadException> loadFile(@NotNull Fi file) {
         if (!SaveIO.isSaveValid(file))
             return Result.error(new WorldLoadException.InvalidInputException("Invalid save file: " + file.name()));
 

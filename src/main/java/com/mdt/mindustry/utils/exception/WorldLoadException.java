@@ -1,6 +1,6 @@
 package com.mdt.mindustry.utils.exception;
 
-import com.mdt.common.shared.signal.Failure;
+import com.mdt.common.signal.Failure;
 
 public sealed interface WorldLoadException extends Failure {
 
