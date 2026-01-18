@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.mdt.common.utils.CommonUtils;
 import lombok.Builder;
 import lombok.Generated;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import mindustry.gen.Player;
-
-import com.mdt.common.shared.utils.CommonUtils;
 
 @Builder(toBuilder = true)
 public record MenuOption(
