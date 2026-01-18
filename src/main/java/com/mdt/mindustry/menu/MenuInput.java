@@ -1,11 +1,10 @@
 package com.mdt.mindustry.menu;
 
+import com.mdt.common.utils.CommonUtils;
 import lombok.Builder;
 import lombok.Generated;
 import lombok.NonNull;
 import mindustry.gen.Player;
-
-import com.mdt.common.shared.utils.CommonUtils;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
