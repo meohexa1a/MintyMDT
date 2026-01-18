@@ -1,16 +1,12 @@
 plugins {
     id("java-library")
-    id("com.gradleup.shadow") version "8.3.7"
-    id("io.micronaut.library") version "4.5.4"
-    id("io.micronaut.aot") version "4.5.4"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-version = "1.0"
+version = "3.0"
 group = "com.mdt"
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
 
 ext {
     mindustryVersion = "v154"
@@ -25,7 +21,6 @@ java {
 repositories {
     mavenCentral()
     maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
-    maven { url "https://www.jitpack.io" }
 }
 
 dependencies {
@@ -33,22 +28,17 @@ dependencies {
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 
-    compileOnly "org.projectlombok:lombok"
-    annotationProcessor "org.projectlombok:lombok"
-    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("ch.qos.logback:logback-classic:1.5.16")
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
-    api("io.micronaut:micronaut-context")
-    api("io.micronaut:micronaut-runtime")
-    implementation("io.micronaut.cache:micronaut-cache-caffeine")
-}
-
-micronaut {
-    processing {
-        incremental(true)
-        annotations("com.mdt.*")
-    }
+    implementation("org.codejargon.feather:feather:1.0")
 }
 
 shadowJar {
-    mergeServiceFiles() 
+    archiveClassifier.set("")
+}
+
+artifacts {
+    archives shadowJar
 }
