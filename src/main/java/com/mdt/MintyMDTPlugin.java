@@ -47,7 +47,7 @@ public final class MintyMDTPlugin extends Plugin {
                 add(clientHandler);
             }});
         } catch (Exception e) {
-            log.error("Failed to initialize Dependency Injection. Exit application", e);
+            log.error("Failed to initialize. Exit application", e);
             System.exit(-1);
         }
 

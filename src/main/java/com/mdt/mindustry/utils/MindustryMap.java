@@ -1,12 +1,13 @@
 package com.mdt.mindustry.utils;
 
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import mindustry.Vars;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
 
-import javax.annotation.Nonnull;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.UUID;
@@ -27,14 +28,15 @@ public class MindustryMap {
         return getRandom();
     }
 
-    public static @Nonnull Map getRandom() {
+    @SuppressWarnings("nullness")
+    public static @NotNull Map getRandom() {
         if (!Vars.maps.customMaps().isEmpty()) return Vars.maps.customMaps().random();
         return Vars.maps.defaultMaps().random();
     }
 
     // !------------------------------------------------------------!
 
-    public static Map newFromStream(@Nonnull InputStream stream) {
+    public static Map newFromStream(@NotNull InputStream stream) {
         try {
             var fi = new arc.files.Fi(File.createTempFile(UUID.randomUUID().toString(), Vars.mapExtension));
             fi.write(stream, false);

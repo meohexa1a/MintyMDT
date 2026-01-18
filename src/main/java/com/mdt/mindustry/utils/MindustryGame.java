@@ -1,9 +1,10 @@
 package com.mdt.mindustry.utils;
 
-import arc.util.Nullable;
-import lombok.experimental.UtilityClass;
 import mindustry.Vars;
 import mindustry.game.Team;
+
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public class MindustryGame {

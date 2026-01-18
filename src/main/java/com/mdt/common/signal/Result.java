@@ -1,6 +1,5 @@
 package com.mdt.common.signal;
 
-import javax.annotation.Nonnull;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,7 +25,7 @@ public sealed interface Result<T, F extends Failure> {
 
     // !-----------------------------------------------!
 
-    default <U> Result<U, F> map(Function<T, U> fn) {
+    default <U> Result<U, F> map(Function<T, @Nonnull U> fn) {
         return switch (this) {
             case Result.Success<T, F> d -> new Success<>(fn.apply(d.value()));
             case Empty<T, F> ignore -> new Empty<>();

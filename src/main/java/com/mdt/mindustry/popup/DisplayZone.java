@@ -39,7 +39,7 @@ public enum DisplayZone {
     // !----------------------------------------------------------------!
 
     public PopupMargin getMargin(Player player) {
-        return (player.con != null && player.con.mobile) ? mobileMargin : desktopMargin;
+        return (player.con != null && player.con().mobile) ? mobileMargin : desktopMargin;
     }
 
     // !----------------------------------------------------------------!
