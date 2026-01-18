@@ -1,8 +1,6 @@
-package com.mdt.mindustry.menu.service;
+package com.mdt.mindustry.menu;
 
-import com.mdt.mindustry.menu.type.MenuInput;
-import com.mdt.mindustry.menu.type.MenuOption;
-import jakarta.annotation.Nonnull;
+import javax.annotation.Nonnull;
 import lombok.NonNull;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
@@ -12,7 +10,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mdt.common.type.Pair;
 
-import jakarta.inject.Singleton;
+import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,11 +1,10 @@
-package com.mdt.mindustry.popup.service;
+package com.mdt.mindustry.popup;
 
-import com.mdt.mindustry.popup.type.PopupProvider;
-import jakarta.annotation.Nonnull;
+import javax.annotation.Nonnull;
 import mindustry.gen.Call;
 
 import io.micronaut.scheduling.annotation.Scheduled;
-import jakarta.inject.Singleton;
+import javax.inject.Singleton;
 import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

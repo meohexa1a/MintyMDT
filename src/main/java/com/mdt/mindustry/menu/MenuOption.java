@@ -1,4 +1,4 @@
-package com.mdt.mindustry.menu.type;
+package com.mdt.mindustry.menu;
 
 import java.util.ArrayList;
 import java.util.List;

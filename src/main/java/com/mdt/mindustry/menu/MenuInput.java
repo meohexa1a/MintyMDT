@@ -1,4 +1,4 @@
-package com.mdt.mindustry.menu.type;
+package com.mdt.mindustry.menu;
 
 import lombok.Builder;
 import lombok.Generated;

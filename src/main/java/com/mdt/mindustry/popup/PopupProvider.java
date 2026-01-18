@@ -1,4 +1,4 @@
-package com.mdt.mindustry.popup.type;
+package com.mdt.mindustry.popup;
 
 import java.util.List;
 import java.util.function.Function;

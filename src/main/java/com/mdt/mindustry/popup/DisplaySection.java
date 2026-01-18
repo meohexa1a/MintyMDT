@@ -1,4 +1,4 @@
-package com.mdt.mindustry.popup.enums;
+package com.mdt.mindustry.popup;
 
 public enum DisplaySection {
     HEADER,

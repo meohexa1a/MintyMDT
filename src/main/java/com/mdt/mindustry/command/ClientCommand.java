@@ -1,4 +1,4 @@
-package com.mdt.mindustry.command.type;
+package com.mdt.mindustry.command;
 
 import lombok.Builder;
 import lombok.NonNull;

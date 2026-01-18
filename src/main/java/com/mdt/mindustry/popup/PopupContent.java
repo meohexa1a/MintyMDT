@@ -1,7 +1,5 @@
-package com.mdt.mindustry.popup.type;
+package com.mdt.mindustry.popup;
 
-import com.mdt.mindustry.popup.enums.DisplaySection;
-import com.mdt.mindustry.popup.enums.DisplayZone;
 import lombok.Builder;
 import lombok.Generated;
 import lombok.NonNull;
