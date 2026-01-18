@@ -3,7 +3,7 @@ package com.mdt.mindustry.command.service;
 import com.mdt.MintyMDTPlugin;
 import com.mdt.mindustry.command.type.ClientCommand;
 import com.mdt.mindustry.command.type.ConsoleCommand;
-import com.mdt.common.shared.type.Pair;
+import com.mdt.common.type.Pair;
 import jakarta.inject.Singleton;
 import lombok.Locked;
 import lombok.NonNull;

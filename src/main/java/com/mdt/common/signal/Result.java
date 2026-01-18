@@ -1,4 +1,4 @@
-package com.mdt.common.shared.signal;
+package com.mdt.common.signal;
 
 import javax.annotation.Nonnull;
 

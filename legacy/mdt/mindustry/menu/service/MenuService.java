@@ -10,7 +10,7 @@ import mindustry.ui.Menus;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.mdt.common.shared.type.Pair;
+import com.mdt.common.type.Pair;
 
 import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;

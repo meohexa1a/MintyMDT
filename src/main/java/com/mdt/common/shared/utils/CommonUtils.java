@@ -1,6 +1,6 @@
 package com.mdt.common.shared.utils;
 
-import com.mdt.common.shared.signal.Unit;
+import com.mdt.common.signal.Unit;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

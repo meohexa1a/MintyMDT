@@ -1,4 +1,4 @@
-package com.mdt.common.shared.signal;
+package com.mdt.common.signal;
 
 /**
  * Represents a type that holds no meaningful data except for its existence.

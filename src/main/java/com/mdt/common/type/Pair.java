@@ -1,4 +1,4 @@
-package com.mdt.common.shared.type;
+package com.mdt.common.type;
 
 import lombok.NonNull;
 
