@@ -52,7 +52,6 @@ public final class MintyMDTPlugin extends Plugin {
         }
 
         log.info("MintyMDT Plugin Framework - v3.0");
-        log.info("All system normal.");
     }
 
     private Set<Class<?>> scanAnnotatedClasses() {
