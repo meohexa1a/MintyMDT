@@ -1,4 +1,4 @@
-package com.mdt.common.shared.utils;
+package com.mdt.common.utils;
 
 import lombok.experimental.UtilityClass;
 
