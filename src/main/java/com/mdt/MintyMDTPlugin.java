@@ -24,18 +24,18 @@ public final class MintyMDTPlugin extends Plugin {
     @Override
     public void registerServerCommands(CommandHandler handler) {
         MintyMDTPlugin.serverHandler = handler;
-        init_mdt();
+        initMintyMDT();
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
         MintyMDTPlugin.clientHandler = handler;
-        init_mdt();
+        initMintyMDT();
     }
 
     // !--------------------------------------------------------!
 
-    private synchronized void init_mdt() {
+    private synchronized void initMintyMDT() {
         if (isStarted || serverHandler == null || clientHandler == null) return;
         this.isStarted = true;
 
