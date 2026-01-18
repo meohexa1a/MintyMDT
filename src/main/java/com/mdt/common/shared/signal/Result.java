@@ -1,6 +1,6 @@
 package com.mdt.common.shared.signal;
 
-import jakarta.annotation.Nonnull;
+import javax.annotation.Nonnull;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
