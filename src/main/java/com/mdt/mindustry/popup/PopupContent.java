@@ -10,7 +10,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Builder(toBuilder = true)
-public record PopupContent(@NonNull DisplayZone zone, @NonNull String content) {
+public record PopupContent(
+        @NonNull DisplayZone zone,
+        @NonNull String content) {
 
     @Generated
     public static class PopupContentBuilder {

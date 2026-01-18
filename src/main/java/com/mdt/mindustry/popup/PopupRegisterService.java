@@ -1,6 +1,5 @@
 package com.mdt.mindustry.popup;
 
-import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import arc.util.Timer;
 import mindustry.gen.Call;
@@ -8,6 +7,7 @@ import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mindustry.gen.Groups;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -26,12 +26,12 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     @Locked.Write
-    public void register(@Nonnull String group, @Nonnull Set<PopupProvider> providers) {
+    public void register(@NotNull String group, @NotNull Set<PopupProvider> providers) {
         registered.computeIfAbsent(group, k -> new ArrayList<>()).addAll(providers);
     }
 
     @Locked.Write
-    public void unregister(@Nonnull String group) {
+    public void unregister(@NotNull String group) {
         registered.remove(group);
     }
 

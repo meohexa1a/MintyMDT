@@ -2,11 +2,13 @@ package com.mdt.mindustry.command;
 
 import com.mdt.MintyMDTPlugin;
 import com.mdt.common.type.Pair;
+
 import javax.inject.Singleton;
+
 import lombok.Locked;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import mindustry.gen.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,8 @@ public final class CommandRegisterService {
 
     @Locked
     public void registerCommands(String group,
-            @NonNull Set<ClientCommand> clientCommands, @NonNull Set<ConsoleCommand> consoleCommands) {
+                                 @NotNull Set<ClientCommand> clientCommands,
+                                 @NotNull Set<ConsoleCommand> consoleCommands) {
         if (registered.containsKey(group)) unregister(group);
 
         registered.put(group, new Pair<>(clientCommands, consoleCommands));

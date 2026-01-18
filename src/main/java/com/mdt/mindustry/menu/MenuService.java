@@ -1,7 +1,5 @@
 package com.mdt.mindustry.menu;
 
-import javax.annotation.Nonnull;
-import lombok.NonNull;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.ui.Menus;
@@ -10,9 +8,10 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mdt.common.type.Pair;
 
-import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import javax.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,21 +25,21 @@ public final class MenuService {
     private final int menuId = Menus.registerMenu(this::handleMenuSelection);
     private final int inputId = Menus.registerTextInput(this::handleTextInput);
 
-    private final Cache<@NonNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption =
+    private final Cache<@NotNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption =
             Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
-    private final Cache<@NonNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput =
+    private final Cache<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput =
             Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
 
     // !----------------------------------------------------------------!
 
-    public void showMenu(@Nonnull Player player, @Nonnull MenuOption menuOption) {
+    public void showMenu(@NotNull Player player, @NotNull MenuOption menuOption) {
         showedMenuOption.put(player.uuid(), Pair.of(menuOption.actions(), menuOption.userCloseAction()));
 
         Call.hideFollowUpMenu(player.con, menuId);
         Call.followUpMenu(player.con, menuId, menuOption.title(), menuOption.message(), menuOption.options());
     }
 
-    public void showInput(@Nonnull Player player,@Nonnull MenuInput menuInput) {
+    public void showInput(@NotNull Player player,@NotNull MenuInput menuInput) {
         showedMenuInput.put(player.uuid(), Pair.of(menuInput.action(), menuInput.userCloseAction()));
 
         Call.textInput(player.con, inputId, menuInput.title(), menuInput.message(), 1024, menuInput.holder(), menuInput.isNumber());
