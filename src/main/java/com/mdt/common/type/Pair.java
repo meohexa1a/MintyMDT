@@ -1,6 +1,5 @@
 package com.mdt.common.type;
 
-
 import org.jetbrains.annotations.NotNull;
 
 public record Pair<A, B>(A first, B second) {

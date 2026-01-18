@@ -3,11 +3,10 @@ package com.mdt.mindustry.command;
 import com.mdt.MintyMDTPlugin;
 import com.mdt.common.type.Pair;
 
-import javax.inject.Singleton;
-
+import mindustry.gen.Player;
 import lombok.Locked;
 import lombok.extern.slf4j.Slf4j;
-import mindustry.gen.Player;
+import javax.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

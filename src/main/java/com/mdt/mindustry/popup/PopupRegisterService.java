@@ -1,15 +1,15 @@
 package com.mdt.mindustry.popup;
 
-import javax.inject.Singleton;
 import arc.util.Timer;
 import mindustry.gen.Call;
+import mindustry.gen.Groups;
+
+import java.util.*;
 import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mindustry.gen.Groups;
+import javax.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
 
 @Slf4j
 @Singleton
@@ -20,7 +20,7 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     {
-        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 5000, 1000);
+        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 0, 1);
     }
 
     // !----------------------------------------------------------------!
@@ -45,8 +45,9 @@ public final class PopupRegisterService {
     private void applyProviders() {
         if (registered.isEmpty()) return;
 
+        var providers = copyProviders();
         for (var player : Groups.player) {
-            for (var provider : copyProviders()) {
+            for (var provider : providers) {
                 try {
                     for (var content : provider.content().apply(player)) {
                         var margin = content.zone().getMargin(player);

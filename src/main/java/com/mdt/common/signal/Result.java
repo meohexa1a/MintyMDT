@@ -1,5 +1,6 @@
 package com.mdt.common.signal;
 
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -7,7 +8,7 @@ import java.util.function.Supplier;
 
 public sealed interface Result<T, F extends Failure> {
 
-    static <T, F extends Failure> Result<T, F> success(@Nonnull T value) {
+    static <T, F extends Failure> Result<T, F> success(@NotNull T value) {
         return new Success<>(value);
     }
 
@@ -19,13 +20,13 @@ public sealed interface Result<T, F extends Failure> {
         return new Empty<>();
     }
 
-    static <T, F extends Failure> Result<T, F> error(@Nonnull F failure) {
+    static <T, F extends Failure> Result<T, F> error(@NotNull F failure) {
         return new Error<>(failure);
     }
 
     // !-----------------------------------------------!
 
-    default <U> Result<U, F> map(Function<T, @Nonnull U> fn) {
+    default <U> Result<U, F> map(Function<T, @NotNull U> fn) {
         return switch (this) {
             case Result.Success<T, F> d -> new Success<>(fn.apply(d.value()));
             case Empty<T, F> ignore -> new Empty<>();
@@ -132,7 +133,7 @@ public sealed interface Result<T, F extends Failure> {
         // TODO: Map to Success & Final if nedded
     }
 
-    record Success<T, F extends Failure>(@Nonnull T value) implements Result<T, F>, SuccessStatus<T, F> {
+    record Success<T, F extends Failure>(@NotNull T value) implements Result<T, F>, SuccessStatus<T, F> {
 
     }
 
@@ -140,7 +141,7 @@ public sealed interface Result<T, F extends Failure> {
 
     }
 
-    record Error<T, F extends Failure>(@Nonnull F failure) implements Result<T, F> {
+    record Error<T, F extends Failure>(@NotNull F failure) implements Result<T, F> {
 
     }
 }
