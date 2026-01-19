@@ -6,12 +6,15 @@ import mindustry.ui.Menus;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+
 import com.mdt.common.type.Pair;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,9 +30,9 @@ public final class MenuService {
     private final int inputId = Menus.registerTextInput(this::handleTextInput);
 
     private final Cache<@NotNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption = Caffeine
-            .newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+        .newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
     private final Cache<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput = Caffeine
-            .newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+        .newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
 
     // !----------------------------------------------------------------!
 
@@ -44,7 +47,7 @@ public final class MenuService {
         showedMenuInput.put(player.uuid(), Pair.of(menuInput.action(), menuInput.userCloseAction()));
 
         Call.textInput(player.con, inputId, menuInput.title(), menuInput.message(), 1024, menuInput.holder(),
-                menuInput.isNumber());
+            menuInput.isNumber());
     }
 
     // !----------------------------------------------------------------!

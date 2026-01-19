@@ -6,20 +6,22 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.mdt.common.utils.CommonUtils;
+
 import lombok.Builder;
 import lombok.Generated;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
 import mindustry.gen.Player;
 
 @Builder(toBuilder = true)
 public record MenuOption(
-        @NonNull String title,
-        @NonNull String message,
+    @NonNull String title,
+    @NonNull String message,
 
-        @NonNull String[][] options,
-        @NonNull List<Consumer<Player>> actions,
-        @NonNull Consumer<Player> userCloseAction) {
+    @NonNull String[][] options,
+    @NonNull List<Consumer<Player>> actions,
+    @NonNull Consumer<Player> userCloseAction) {
 
     // !----------------------------------------------------------------!
 
@@ -36,8 +38,8 @@ public record MenuOption(
             }
 
             this.options = parsedOptions.stream()
-                    .map(list -> list.toArray(new String[0]))
-                    .toArray(String[][]::new);
+                .map(list -> list.toArray(new String[0]))
+                .toArray(String[][]::new);
 
             this.actions = parsedActions;
             return this;

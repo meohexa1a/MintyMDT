@@ -9,9 +9,9 @@ import java.util.function.Consumer;
 
 @Builder(toBuilder = true)
 public record ConsoleCommand(
-        @NonNull @Singular Set<String> prefixes,
-        @NonNull String description,
-        @NonNull String args,
-        @NonNull Consumer<String[]> action) {
+    @NonNull @Singular Set<String> prefixes,
+    @NonNull String description,
+    @NonNull String args,
+    @NonNull Consumer<String[]> action) {
 
 }
