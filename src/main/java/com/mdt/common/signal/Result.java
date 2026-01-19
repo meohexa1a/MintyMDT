@@ -1,5 +1,7 @@
 package com.mdt.common.signal;
 
+import com.mdt.common.functional.ThrowingSupplier;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -22,6 +24,14 @@ public sealed interface Result<T, F extends Failure> {
 
     static <T, F extends Failure> Result<T, F> error(@NotNull F failure) {
         return new Error<>(failure);
+    }
+
+    static <T, F extends Failure> Result<T, F> of(ThrowingSupplier<@NotNull T> supplier, @NotNull T fallback) {
+        try {
+            return new Success<>(supplier.get());
+        } catch (Throwable e) {
+            return new Success<>(fallback);
+        }
     }
 
     // !-----------------------------------------------!
@@ -85,9 +95,9 @@ public sealed interface Result<T, F extends Failure> {
     }
 
     default <U> Success<U, F> foldToSuccess(
-            Function<T, @NotNull U> onSuccess,
-            Function<F, @NotNull U> onError,
-            Supplier<@NotNull U> onEmpty) {
+        Function<T, @NotNull U> onSuccess,
+        Function<F, @NotNull U> onError,
+        Supplier<@NotNull U> onEmpty) {
         return switch (this) {
             case Success<T, F> s -> new Success<>(onSuccess.apply(s.value()));
             case Error<T, F> e -> new Success<>(onError.apply(e.failure()));
@@ -98,9 +108,9 @@ public sealed interface Result<T, F extends Failure> {
     // !-----------------------------------------------!
 
     default <R> R fold(
-            Function<T, @NotNull R> onSuccess,
-            Function<F, @NotNull R> onError,
-            Supplier<@NotNull R> onEmpty) {
+        Function<T, @NotNull R> onSuccess,
+        Function<F, @NotNull R> onError,
+        Supplier<@NotNull R> onEmpty) {
         return switch (this) {
             case Success<T, F> s -> onSuccess.apply(s.value());
             case Error<T, F> e -> onError.apply(e.failure());

@@ -1,10 +1,14 @@
 package com.mdt;
 
 import com.mdt.common.annotation.Prototype;
+
 import arc.util.CommandHandler;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
 import mindustry.mod.Plugin;
+
 import org.codejargon.feather.Feather;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
@@ -42,9 +46,6 @@ public final class MintyMDTPlugin extends Plugin {
         try {
             MintyMDTPlugin.feather = Feather.with(new HashSet<>() {{
                 addAll(scanAnnotatedClasses());
-
-                add(serverHandler);
-                add(clientHandler);
             }});
         } catch (Exception e) {
             log.error("Failed to initialize. Exit application", e);

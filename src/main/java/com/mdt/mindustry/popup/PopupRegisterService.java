@@ -22,7 +22,7 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     {
-        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 0, 1);
+        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 5, 1);
     }
 
     // !----------------------------------------------------------------!
@@ -45,9 +45,9 @@ public final class PopupRegisterService {
     }
 
     private void applyProviders() {
-        if (registered.isEmpty()) return;
-
         var providers = copyProviders();
+        if (providers.isEmpty()) return;
+
         for (var player : Groups.player) {
             for (var provider : providers) {
                 try {

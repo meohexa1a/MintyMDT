@@ -6,7 +6,9 @@ import mindustry.maps.Map;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -36,7 +38,7 @@ public class MindustryMap {
 
     // !------------------------------------------------------------!
 
-    public static Map newFromStream(@NotNull InputStream stream) {
+    public static @Nullable Map newFromStream(@NotNull InputStream stream) {
         try {
             var fi = new arc.files.Fi(File.createTempFile(UUID.randomUUID().toString(), Vars.mapExtension));
             fi.write(stream, false);

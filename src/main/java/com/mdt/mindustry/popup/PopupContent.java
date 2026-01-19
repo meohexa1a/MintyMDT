@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 @Builder(toBuilder = true)
 public record PopupContent(
-        @NonNull DisplayZone zone,
-        @NonNull String content) {
+    @NonNull DisplayZone zone,
+    @NonNull String content) {
 
     @Generated
     public static class PopupContentBuilder {
@@ -22,8 +22,8 @@ public record PopupContent(
 
         public PopupContentBuilder append(DisplaySection section, String content) {
             sections.computeIfAbsent(section, s -> new StringBuilder())
-                    .append(content)
-                    .append("\n");
+                .append(content)
+                .append("\n");
 
             return this;
         }
@@ -36,9 +36,9 @@ public record PopupContent(
 
         public PopupContentBuilder completeContent() {
             var joined = sections.entrySet().stream()
-                    .sorted(Map.Entry.comparingByKey())
-                    .map(e -> e.getValue().toString())
-                    .collect(Collectors.joining("\n\n"));
+                .sorted(Map.Entry.comparingByKey())
+                .map(e -> e.getValue().toString())
+                .collect(Collectors.joining("\n\n"));
 
             this.content(joined.trim());
             return this;

@@ -4,6 +4,7 @@ import com.mdt.MintyMDTPlugin;
 import com.mdt.common.type.Pair;
 
 import mindustry.gen.Player;
+
 import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +28,10 @@ public final class CommandRegisterService {
 
     @Locked
     public void registerCommands(
-            String group,
-            @NotNull Set<ClientCommand> clientCommands,
-            @NotNull Set<ConsoleCommand> consoleCommands) {
+        String group,
+        @NotNull Set<ClientCommand> clientCommands,
+        @NotNull Set<ConsoleCommand> consoleCommands) {
+
         if (registered.containsKey(group)) unregister(group);
 
         registered.put(group, new Pair<>(clientCommands, consoleCommands));
@@ -43,9 +45,9 @@ public final class CommandRegisterService {
         if (pair == null) return;
 
         pair.first().forEach(clientCommand ->
-                clientCommand.prefixes().forEach(MintyMDTPlugin.getClientHandler()::removeCommand));
+            clientCommand.prefixes().forEach(MintyMDTPlugin.getClientHandler()::removeCommand));
         pair.second().forEach(consoleCommand ->
-                consoleCommand.prefixes().forEach(MintyMDTPlugin.getServerHandler()::removeCommand));
+            consoleCommand.prefixes().forEach(MintyMDTPlugin.getServerHandler()::removeCommand));
     }
 
     // !--------------------------------------------------------!
@@ -56,7 +58,7 @@ public final class CommandRegisterService {
                 try {
                     cmd.action().accept(args, player);
                 } catch (Exception e) {
-                    log.error("Error while executing command | {}", prefix, e);
+                    log.error("Error while executing client command | {}", prefix, e);
                 }
             });
     }
