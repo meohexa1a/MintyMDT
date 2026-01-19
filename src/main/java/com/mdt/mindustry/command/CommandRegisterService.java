@@ -58,7 +58,7 @@ public final class CommandRegisterService {
                 try {
                     cmd.action().accept(args, player);
                 } catch (Exception e) {
-                    log.error("Error while executing command | {}", prefix, e);
+                    log.error("Error while executing client command | {}", prefix, e);
                 }
             });
     }
