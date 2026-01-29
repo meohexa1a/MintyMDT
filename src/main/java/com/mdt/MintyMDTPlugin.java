@@ -44,9 +44,7 @@ public final class MintyMDTPlugin extends Plugin {
         this.isStarted = true;
 
         try {
-            MintyMDTPlugin.feather = Feather.with(new HashSet<>() {{
-                addAll(scanAnnotatedClasses());
-            }});
+            MintyMDTPlugin.feather = Feather.with(new HashSet<>(scanAnnotatedClasses()));
         } catch (Exception e) {
             log.error("Failed to initialize. Exit application", e);
             System.exit(-1);
