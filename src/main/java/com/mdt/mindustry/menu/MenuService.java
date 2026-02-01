@@ -4,9 +4,6 @@ import mindustry.gen.Call;
 import mindustry.gen.Player;
 import mindustry.ui.Menus;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-
 import com.mdt.common.type.Pair;
 
 import lombok.RequiredArgsConstructor;
@@ -14,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.jodah.expiringmap.ExpiringMap;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,10 +28,10 @@ public final class MenuService {
     private final int menuId = Menus.registerMenu(this::handleMenuSelection);
     private final int inputId = Menus.registerTextInput(this::handleTextInput);
 
-    private final Cache<@NotNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption =
-        Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
-    private final Cache<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput =
-        Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+    private final ExpiringMap<@NotNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption =
+        ExpiringMap.builder().expiration(5, TimeUnit.MINUTES).build();
+    private final    ExpiringMap<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput =
+        ExpiringMap.builder().expiration(5, TimeUnit.MINUTES).build();
 
     // !----------------------------------------------------------------!
 
@@ -54,7 +53,7 @@ public final class MenuService {
     private void handleMenuSelection(Player player, int option) {
         Call.hideFollowUpMenu(player.con, menuId);
 
-        var menuOption = showedMenuOption.asMap().remove(player.uuid());
+        var menuOption = showedMenuOption.remove(player.uuid());
         if (menuOption == null) {
             log.warn("Menu actions not found/expired for player: {}", player.name);
             return;
@@ -70,7 +69,7 @@ public final class MenuService {
     }
 
     private void handleTextInput(Player player, String text) {
-        var menuInput = showedMenuInput.asMap().remove(player.uuid());
+        var menuInput = showedMenuInput.remove(player.uuid());
         if (menuInput == null) {
             log.warn("Menu input action not found/expired for player: {}", player.name);
             return;

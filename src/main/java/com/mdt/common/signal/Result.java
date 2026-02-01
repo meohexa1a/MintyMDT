@@ -1,13 +1,12 @@
 package com.mdt.common.signal;
 
-import com.mdt.common.functional.ThrowingSupplier;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public sealed interface Result<T, F extends Failure> {
 
     static <T, F extends Failure> Result<T, F> success(@NotNull T value) {
@@ -26,7 +25,7 @@ public sealed interface Result<T, F extends Failure> {
         return new Error<>(failure);
     }
 
-    static <T, F extends Failure> Result<T, F> of(ThrowingSupplier<@NotNull T> supplier, @NotNull T fallback) {
+    static <T, F extends Failure> Result<T, F> of(Supplier<@NotNull T> supplier, @NotNull T fallback) {
         try {
             return new Success<>(supplier.get());
         } catch (Throwable e) {
@@ -44,11 +43,27 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
+    default Result<T, F> provide(Supplier<T> supplier) {
+        return switch (this) {
+            case Success<T, F> s -> s;
+            case Empty<T, F> ignore -> new Success<>(supplier.get());
+            case Error<T, F> e -> e;
+        };
+    }
+
     default Result<T, F> recover(Function<F, @NotNull T> fn) {
         return switch (this) {
             case Success<T, F> s -> s;
             case Empty<T, F> e -> e;
             case Error<T, F> err -> new Success<>(fn.apply(err.failure()));
+        };
+    }
+
+    default Result<T, F> failIfEmpty(Supplier<F> failureSupplier) {
+        return switch (this) {
+            case Success<T, F> s -> s;
+            case Empty<T, F> ignore -> new Error<>(failureSupplier.get());
+            case Error<T, F> e -> e;
         };
     }
 
@@ -60,11 +75,20 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
+
     default <U> Result<U, F> flatMap(Function<T, @NotNull Result<U, F>> fn) {
         return switch (this) {
             case Success<T, F> s -> fn.apply(s.value());
             case Empty<T, F> ignore -> new Empty<>();
             case Error<T, F> e -> new Error<>(e.failure());
+        };
+    }
+
+    default Result<T, F> provideWith(Supplier<Result<T, F>> supplier) {
+        return switch (this) {
+            case Success<T, F> s -> s;
+            case Empty<T, F> ignore -> supplier.get();
+            case Error<T, F> e -> e;
         };
     }
 

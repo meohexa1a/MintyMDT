@@ -5,19 +5,24 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 
 import java.util.*;
+import java.util.function.Function;
+
 import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import mindustry.gen.Player;
+
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public final class PopupRegisterService {
-    private final Map<String, List<PopupProvider>> registered = new HashMap<>();
+    private final Map<String, Function<Player, List<PopupContent>>> registered = new HashMap<>();
 
     // !----------------------------------------------------------------!
 
@@ -28,8 +33,8 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     @Locked.Write
-    public void register(@NotNull String group, @NotNull Set<PopupProvider> providers) {
-        registered.computeIfAbsent(group, k -> new ArrayList<>()).addAll(providers);
+    public void register(@NotNull String group, @NotNull Function<Player, List<PopupContent>> provider) {
+        registered.put(group, provider);
     }
 
     @Locked.Write
@@ -40,8 +45,8 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     @Locked.Read
-    private List<PopupProvider> copyProviders() {
-        return registered.values().stream().flatMap(Collection::stream).toList();
+    private Set<Function<Player, List<PopupContent>>> copyProviders() {
+        return new HashSet<>(registered.values());
     }
 
     private void applyProviders() {
@@ -51,7 +56,7 @@ public final class PopupRegisterService {
         for (var player : Groups.player) {
             for (var provider : providers) {
                 try {
-                    for (var content : provider.content().apply(player)) {
+                    for (var content : provider.apply(player)) {
                         var margin = content.zone().getMargin(player);
 
                         Call.infoPopupReliable(player.con, content.content(), 1.05f,

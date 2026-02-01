@@ -1,7 +1,5 @@
 package com.mdt;
 
-import com.mdt.common.annotation.Prototype;
-
 import arc.util.CommandHandler;
 
 import lombok.Getter;
@@ -10,12 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import mindustry.mod.Plugin;
 
 import org.codejargon.feather.Feather;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-
-import javax.inject.Singleton;
-import java.util.HashSet;
-import java.util.Set;
 
 @Slf4j
 public final class MintyMDTPlugin extends Plugin {
@@ -44,21 +36,12 @@ public final class MintyMDTPlugin extends Plugin {
         this.isStarted = true;
 
         try {
-            MintyMDTPlugin.feather = Feather.with(new HashSet<>(scanAnnotatedClasses()));
+            MintyMDTPlugin.feather = Feather.with();
         } catch (Exception e) {
             log.error("Failed to initialize. Exit application", e);
             System.exit(-1);
         }
 
         log.info("MintyMDT Plugin Framework - v3.0");
-    }
-
-    private Set<Class<?>> scanAnnotatedClasses() {
-        return new HashSet<>() {{
-            var reflections = new Reflections("com.mdt", Scanners.TypesAnnotated);
-
-            addAll(reflections.getTypesAnnotatedWith(Prototype.class));
-            addAll(reflections.getTypesAnnotatedWith(Singleton.class));
-        }};
     }
 }

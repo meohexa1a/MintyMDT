@@ -7,7 +7,6 @@ import lombok.Singular;
 
 import mindustry.gen.Player;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
