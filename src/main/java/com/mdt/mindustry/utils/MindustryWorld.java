@@ -43,7 +43,7 @@ public class MindustryWorld {
         return doLoad(() -> Vars.world.loadMap(map));
     }
 
-    public static Result<Unit, WorldLoadException> loadF(@NotNull Fi file) {
+    public static Result<Unit, WorldLoadException> load(@NotNull Fi file) {
         if (!SaveIO.isSaveValid(file))
             return Result.error(new WorldLoadException.InvalidInputException("Invalid save file: " + file.name()));
 
