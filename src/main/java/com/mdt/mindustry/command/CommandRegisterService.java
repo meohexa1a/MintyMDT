@@ -34,7 +34,7 @@ public final class CommandRegisterService {
 
         if (registered.containsKey(group)) unregister(group);
 
-        registered.put(group, new Pair<>(clientCommands, consoleCommands));
+        registered.put(group, Pair.of(clientCommands, consoleCommands));
         clientCommands.forEach(this::registerClient);
         consoleCommands.forEach(this::registerConsole);
     }
