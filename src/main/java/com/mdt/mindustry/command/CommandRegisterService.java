@@ -27,7 +27,7 @@ public final class CommandRegisterService {
     // !---------------------------------------------------------------------!
 
     @Locked
-    public void registerCommands(
+    public void register(
         String group,
         @NotNull Set<ClientCommand> clientCommands,
         @NotNull Set<ConsoleCommand> consoleCommands) {
