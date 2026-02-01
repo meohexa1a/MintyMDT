@@ -30,7 +30,7 @@ public final class MenuService {
 
     private final ExpiringMap<@NotNull String, Pair<List<Consumer<Player>>, Consumer<Player>>> showedMenuOption =
         ExpiringMap.builder().expiration(5, TimeUnit.MINUTES).build();
-    private final    ExpiringMap<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput =
+    private final ExpiringMap<@NotNull String, Pair<BiConsumer<Player, String>, Consumer<Player>>> showedMenuInput =
         ExpiringMap.builder().expiration(5, TimeUnit.MINUTES).build();
 
     // !----------------------------------------------------------------!
