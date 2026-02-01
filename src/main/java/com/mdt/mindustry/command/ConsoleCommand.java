@@ -1,6 +1,7 @@
 package com.mdt.mindustry.command;
 
 import lombok.Builder;
+import lombok.Generated;
 import lombok.NonNull;
 import lombok.Singular;
 
@@ -14,4 +15,8 @@ public record ConsoleCommand(
     @NonNull String args,
     @NonNull Consumer<String[]> action) {
 
+    public static class ConsoleCommandBuilder {
+        private @Generated String description = "";
+        private @Generated String args = "";
+    }
 }
