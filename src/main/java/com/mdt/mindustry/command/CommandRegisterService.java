@@ -45,7 +45,7 @@ public final class CommandRegisterService {
         if (pair == null) return;
 
         pair.first().forEach(clientCommand ->
-            clientCommand.prefixes().forEach(MintyMDTPlugin.getClientHandler()::removeCommand));
+            clientCommand.prefixes().forEach(clientHandler::removeCommand));
         pair.second().forEach(consoleCommand ->
             consoleCommand.prefixes().forEach(MintyMDTPlugin.getServerHandler()::removeCommand));
     }
