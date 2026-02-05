@@ -3,7 +3,7 @@ package com.mdt.mindustry.utils;
 import arc.files.Fi;
 
 import com.mdt.common.signal.Result;
-import com.mdt.common.signal.Unit;
+import com.mdt.common.type.Unit;
 import com.mdt.mindustry.utils.exception.WorldCaptureException;
 import com.mdt.mindustry.utils.exception.WorldLoadException;
 

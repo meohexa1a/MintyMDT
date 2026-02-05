@@ -10,7 +10,6 @@ import java.util.function.Function;
 import lombok.Locked;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -27,7 +26,7 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     {
-        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 5, 1);
+        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 0, 1);
     }
 
     // !----------------------------------------------------------------!
@@ -60,8 +59,8 @@ public final class PopupRegisterService {
                         var margin = content.zone().getMargin(player);
 
                         Call.infoPopupReliable(player.con, content.content(), 1.05f,
-                                content.zone().getAlignFlag(),
-                                margin.top(), margin.left(), margin.bottom(), margin.right());
+                            content.zone().getAlignFlag(),
+                            margin.top(), margin.left(), margin.bottom(), margin.right());
                     }
                 } catch (Exception e) {
                     log.error("Provider {} failed for player {}", provider.getClass().getSimpleName(), player.name, e);

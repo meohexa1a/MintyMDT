@@ -1,15 +1,16 @@
 package com.mdt.mindustry.command;
 
-import com.mdt.MintyMDTPlugin;
+import arc.util.CommandHandler;
+
 import com.mdt.common.type.Pair;
 
 import mindustry.gen.Player;
 
 import lombok.Locked;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,9 +21,20 @@ import java.util.Set;
 
 @Slf4j
 @Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
 public final class CommandRegisterService {
     private final Map<String, Pair<Set<ClientCommand>, Set<ConsoleCommand>>> registered = new HashMap<>();
+
+    private final CommandHandler clientHandler;
+    private final CommandHandler serverHandler;
+
+    @Inject
+    public CommandRegisterService(
+        @Named("client") CommandHandler clientHandler,
+        @Named("server") CommandHandler serverHandler) {
+
+        this.clientHandler = clientHandler;
+        this.serverHandler = serverHandler;
+    }
 
     // !---------------------------------------------------------------------!
 
@@ -44,17 +56,15 @@ public final class CommandRegisterService {
         var pair = registered.remove(group);
         if (pair == null) return;
 
-        pair.first().forEach(clientCommand ->
-            clientCommand.prefixes().forEach(clientHandler::removeCommand));
-        pair.second().forEach(consoleCommand ->
-            consoleCommand.prefixes().forEach(MintyMDTPlugin.getServerHandler()::removeCommand));
+        pair.first().forEach(cmd -> cmd.prefixes().forEach(clientHandler::removeCommand));
+        pair.second().forEach(cmd -> cmd.prefixes().forEach(serverHandler::removeCommand));
     }
 
     // !--------------------------------------------------------!
 
     private void registerClient(ClientCommand cmd) {
         for (var prefix : cmd.prefixes())
-            MintyMDTPlugin.getClientHandler().<Player>register(prefix, cmd.args(), cmd.description(), (args, player) -> {
+            clientHandler.<Player>register(prefix, cmd.args(), cmd.description(), (args, player) -> {
                 try {
                     cmd.action().accept(args, player);
                 } catch (Exception e) {
@@ -65,7 +75,7 @@ public final class CommandRegisterService {
 
     private void registerConsole(ConsoleCommand cmd) {
         for (String prefix : cmd.prefixes())
-            MintyMDTPlugin.getServerHandler().register(prefix, cmd.args(), cmd.description(), (args) -> {
+            serverHandler.register(prefix, cmd.args(), cmd.description(), (args) -> {
                 try {
                     cmd.action().accept(args);
                 } catch (Exception ex) {

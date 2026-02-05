@@ -1,5 +1,7 @@
 package com.mdt.common.signal;
 
+import com.mdt.common.type.Unit;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
