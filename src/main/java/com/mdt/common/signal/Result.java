@@ -2,6 +2,7 @@ package com.mdt.common.signal;
 
 import com.mdt.common.type.Unit;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -11,23 +12,28 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public sealed interface Result<T, F extends Failure> {
 
-    static <T, F extends Failure> Result<T, F> success(@NotNull T value) {
+    @Contract("_ -> new")
+    static <T, F extends Failure> @NotNull Result<T, F> success(@NotNull T value) {
         return new Success<>(value);
     }
 
-    static <F extends Failure> Result<Unit, F> ok() {
+    @Contract(" -> new")
+    static <F extends Failure> @NotNull Result<Unit, F> ok() {
         return new Success<>(Unit.INSTANCE);
     }
 
-    static <T, F extends Failure> Result<T, F> empty() {
+    @Contract(" -> new")
+    static <T, F extends Failure> @NotNull Result<T, F> empty() {
         return new Empty<>();
     }
 
-    static <T, F extends Failure> Result<T, F> error(@NotNull F failure) {
+    @Contract("_ -> new")
+    static <T, F extends Failure> @NotNull Result<T, F> error(@NotNull F failure) {
         return new Error<>(failure);
     }
 
-    static <T, F extends Failure> Result<T, F> of(Supplier<@NotNull T> supplier, @NotNull T fallback) {
+    @Contract("_, _ -> new")
+    static <T, F extends Failure> @NotNull Result<T, F> of(Supplier<@NotNull T> supplier, @NotNull T fallback) {
         try {
             return new Success<>(supplier.get());
         } catch (Throwable e) {

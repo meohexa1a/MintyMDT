@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import mindustry.gen.Player;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 @Builder(toBuilder = true)
 public record MenuOption(
     @NonNull String title,
@@ -54,7 +57,7 @@ public record MenuOption(
         // !----------------------------------------------------------------!
 
         @SuppressWarnings("unchecked")
-        public E buttons(Button... buttons) {
+        public E buttons(Button @NotNull ... buttons) {
             if (buttons.length > 0) this.currentRow.addAll(List.of(buttons));
             return (E) this;
         }
@@ -110,7 +113,8 @@ public record MenuOption(
 
     public record Button(String text, Consumer<Player> action) {
 
-        public static Button of(String text, Consumer<Player> action) {
+        @Contract("_, _ -> new")
+        public static @NotNull Button of(@NotNull String text, @NotNull Consumer<Player> action) {
             return new Button(text, action);
         }
     }
