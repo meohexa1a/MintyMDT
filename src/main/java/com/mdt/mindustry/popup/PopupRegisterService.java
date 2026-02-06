@@ -8,9 +8,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import lombok.Locked;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import mindustry.gen.Player;
@@ -19,17 +17,14 @@ import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
 public final class PopupRegisterService {
     private final Map<String, Function<Player, List<PopupContent>>> registered = new HashMap<>();
 
     // !----------------------------------------------------------------!
 
-    {
+    public PopupRegisterService() {
         Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 0, 1);
     }
-
-    // !----------------------------------------------------------------!
 
     @Locked.Write
     public void register(@NotNull String group, @NotNull Function<Player, List<PopupContent>> provider) {

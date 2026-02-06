@@ -1,15 +1,13 @@
 package com.mdt.mindustry.command;
 
 import arc.util.CommandHandler;
+import mindustry.gen.Player;
 
 import com.mdt.common.type.Pair;
-
-import mindustry.gen.Player;
 
 import lombok.Locked;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -27,7 +25,6 @@ public final class CommandRegisterService {
     private final CommandHandler clientHandler;
     private final CommandHandler serverHandler;
 
-    @Inject
     public CommandRegisterService(
         @Named("client") CommandHandler clientHandler,
         @Named("server") CommandHandler serverHandler) {
