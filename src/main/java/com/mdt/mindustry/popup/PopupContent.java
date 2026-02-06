@@ -4,10 +4,7 @@ import lombok.Builder;
 import lombok.Generated;
 import lombok.NonNull;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Builder(toBuilder = true)
 public record PopupContent(
@@ -16,31 +13,26 @@ public record PopupContent(
 
     @Generated
     public static class PopupContentBuilder {
-        private final EnumMap<DisplaySection, StringBuilder> sections = new EnumMap<>(DisplaySection.class);
+        private @Generated DisplayZone displayZone = DisplayZone.POPUP_TOP_LEFT;
+
+        private final StringBuilder stringBuilder = new StringBuilder();
 
         // !------------------------------------------------------!
 
-        public PopupContentBuilder append(DisplaySection section, String content) {
-            sections.computeIfAbsent(section, s -> new StringBuilder())
-                .append(content)
-                .append("\n");
+        public PopupContentBuilder append(String content) {
+            stringBuilder.append(content);
 
             return this;
         }
 
-        public PopupContentBuilder appendIf(boolean condition, DisplaySection section, Supplier<String> content) {
-            if (condition) return append(section, content.get());
+        public PopupContentBuilder appendIf(boolean condition, Supplier<String> content) {
+            if (condition) return append(content.get());
 
             return this;
         }
 
         public PopupContentBuilder completeContent() {
-            var joined = sections.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(e -> e.getValue().toString())
-                .collect(Collectors.joining("\n\n"));
-
-            this.content(joined.trim());
+            this.content(stringBuilder.toString());
             return this;
         }
     }
