@@ -1,6 +1,7 @@
 package com.mdt.common.utils;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FormatUtils {
@@ -11,7 +12,7 @@ public class FormatUtils {
      * @param millis the time in milliseconds
      * @return the formatted time string
      */
-    public static String formatTime(long millis) {
+    public static @NotNull String formatTime(long millis) {
         long seconds = millis / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;

@@ -3,7 +3,7 @@ package com.mdt.mindustry.utils;
 import arc.files.Fi;
 
 import com.mdt.common.signal.Result;
-import com.mdt.common.signal.Unit;
+import com.mdt.common.type.Unit;
 import com.mdt.mindustry.utils.exception.WorldCaptureException;
 import com.mdt.mindustry.utils.exception.WorldLoadException;
 
@@ -36,14 +36,14 @@ public class MindustryWorld {
 
     // !----------------------------------------------------------------!
 
-    public static Result<Unit, WorldLoadException> loadMap(@NotNull Map map) {
+    public static Result<Unit, WorldLoadException> load(@NotNull Map map) {
         if (!SaveIO.isSaveValid(map.file))
             return Result.error(new WorldLoadException.InvalidInputException("Invalid map: " + map.file.name()));
 
         return doLoad(() -> Vars.world.loadMap(map));
     }
 
-    public static Result<Unit, WorldLoadException> loadFile(@NotNull Fi file) {
+    public static Result<Unit, WorldLoadException> load(@NotNull Fi file) {
         if (!SaveIO.isSaveValid(file))
             return Result.error(new WorldLoadException.InvalidInputException("Invalid save file: " + file.name()));
 

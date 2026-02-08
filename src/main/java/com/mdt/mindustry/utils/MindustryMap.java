@@ -18,7 +18,7 @@ import java.util.UUID;
 @UtilityClass
 public class MindustryMap {
 
-    public static Map findOrGetRandom(String input) {
+    public static @NotNull Map findOrGetRandom(String input) {
         if (input == null || input.isEmpty()) return getRandom();
 
         var customMapResult = Vars.maps.customMaps().find(map -> map.name().equalsIgnoreCase(input));

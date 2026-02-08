@@ -5,31 +5,30 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 
 import java.util.*;
-import lombok.Locked;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.function.Function;
 
-import javax.inject.Inject;
+import lombok.Locked;
+import lombok.extern.slf4j.Slf4j;
 import javax.inject.Singleton;
+
+import mindustry.gen.Player;
+
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 @Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
 public final class PopupRegisterService {
-    private final Map<String, List<PopupProvider>> registered = new HashMap<>();
+    private final Map<String, Function<Player, List<PopupContent>>> registered = new HashMap<>();
 
     // !----------------------------------------------------------------!
 
-    {
-        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 5, 1);
+    public PopupRegisterService() {
+        Timer.schedule(() -> arc.Core.app.post(this::applyProviders), 0, 1);
     }
 
-    // !----------------------------------------------------------------!
-
     @Locked.Write
-    public void register(@NotNull String group, @NotNull Set<PopupProvider> providers) {
-        registered.computeIfAbsent(group, k -> new ArrayList<>()).addAll(providers);
+    public void register(@NotNull String group, @NotNull Function<Player, List<PopupContent>> provider) {
+        registered.put(group, provider);
     }
 
     @Locked.Write
@@ -40,8 +39,8 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     @Locked.Read
-    private List<PopupProvider> copyProviders() {
-        return registered.values().stream().flatMap(Collection::stream).toList();
+    private Set<Function<Player, List<PopupContent>>> copyProviders() {
+        return new HashSet<>(registered.values());
     }
 
     private void applyProviders() {
@@ -51,12 +50,12 @@ public final class PopupRegisterService {
         for (var player : Groups.player) {
             for (var provider : providers) {
                 try {
-                    for (var content : provider.content().apply(player)) {
+                    for (var content : provider.apply(player)) {
                         var margin = content.zone().getMargin(player);
 
                         Call.infoPopupReliable(player.con, content.content(), 1.05f,
-                                content.zone().getAlignFlag(),
-                                margin.top(), margin.left(), margin.bottom(), margin.right());
+                            content.zone().getAlignFlag(),
+                            margin.top(), margin.left(), margin.bottom(), margin.right());
                     }
                 } catch (Exception e) {
                     log.error("Provider {} failed for player {}", provider.getClass().getSimpleName(), player.name, e);

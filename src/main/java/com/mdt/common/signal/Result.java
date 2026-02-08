@@ -1,7 +1,8 @@
 package com.mdt.common.signal;
 
-import com.mdt.common.functional.ThrowingSupplier;
+import com.mdt.common.type.Unit;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -10,41 +11,65 @@ import java.util.function.Supplier;
 
 public sealed interface Result<T, F extends Failure> {
 
-    static <T, F extends Failure> Result<T, F> success(@NotNull T value) {
+    @Contract(value = "_ -> new", pure = true)
+    static <T, F extends Failure> @NotNull Result<T, F> success(@NotNull T value) {
         return new Success<>(value);
     }
 
-    static <F extends Failure> Result<Unit, F> ok() {
+    @Contract(value = " -> new", pure = true)
+    static <F extends Failure> @NotNull Result<Unit, F> ok() {
         return new Success<>(Unit.INSTANCE);
     }
 
-    static <T, F extends Failure> Result<T, F> empty() {
+    @Contract(value = " -> new", pure = true)
+    static <T, F extends Failure> @NotNull Result<T, F> empty() {
         return new Empty<>();
     }
 
-    static <T, F extends Failure> Result<T, F> error(@NotNull F failure) {
+    @Contract(value = "_ -> new", pure = true)
+    static <T, F extends Failure> @NotNull Result<T, F> error(@NotNull F failure) {
         return new Error<>(failure);
     }
 
-    static <T, F extends Failure> Result<T, F> of(ThrowingSupplier<@NotNull T> supplier, @NotNull T fallback) {
+    static <T, F extends Failure> @NotNull Result<T, F> of(Supplier<@NotNull T> supplier, @NotNull T fallback) {
         try {
             return new Success<>(supplier.get());
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return new Success<>(fallback);
         }
     }
 
-    // !-----------------------------------------------!
+    // !----------------------------------------------------------------------------!
 
-    default <U> Result<U, F> map(Function<T, @NotNull U> fn) {
+    @Contract(pure = true)
+    default <U> Result<U, F> map(Function<? super T, ? extends U> fn) {
         return switch (this) {
-            case Result.Success<T, F> d -> new Success<>(fn.apply(d.value()));
-            case Empty<T, F> ignore -> new Empty<>();
-            case Error<T, F> e -> new Error<>(e.failure());
+            case Result.Success<T, F> s -> new Success<>(fn.apply(s.value()));
+            case Empty<T, F> e -> e.cast();
+            case Error<T, F> e -> e.cast();
         };
     }
 
-    default Result<T, F> recover(Function<F, @NotNull T> fn) {
+    @Contract(pure = true)
+    default Result<T, F> provide(Supplier<? extends @NotNull T> supplier) {
+        return switch (this) {
+            case Success<T, F> s -> s;
+            case Empty<T, F> ignore -> new Success<>(supplier.get());
+            case Error<T, F> e -> e;
+        };
+    }
+
+    @Contract(pure = true)
+    default Result<T, F> fallIfEmpty(Supplier<@NotNull F> supplier) {
+        return switch (this) {
+            case Success<T, F> s -> s;
+            case Empty<T, F> ignore -> new Error<>(supplier.get());
+            case Error<T, F> e -> e;
+        };
+    }
+
+    @Contract(pure = true)
+    default Result<T, F> recover(Function<? super F, ? extends T> fn) {
         return switch (this) {
             case Success<T, F> s -> s;
             case Empty<T, F> e -> e;
@@ -52,22 +77,35 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default <G extends Failure> Result<T, G> mapError(Function<F, @NotNull G> fn) {
+    @Contract(pure = true)
+    default <G extends Failure> Result<T, G> mapError(Function<? super F, ? extends G> fn) {
         return switch (this) {
-            case Success<T, F> s -> new Success<>(s.value());
-            case Empty<T, F> ignore -> new Empty<>();
+            case Success<T, F> s -> s.cast();
+            case Empty<T, F> e -> e.cast();
             case Error<T, F> e -> new Error<>(fn.apply(e.failure()));
         };
     }
 
-    default <U> Result<U, F> flatMap(Function<T, @NotNull Result<U, F>> fn) {
+
+    @Contract(pure = true)
+    default <U> Result<U, F> flatMap(Function<? super T, @NotNull Result<U, F>> fn) {
         return switch (this) {
             case Success<T, F> s -> fn.apply(s.value());
-            case Empty<T, F> ignore -> new Empty<>();
-            case Error<T, F> e -> new Error<>(e.failure());
+            case Empty<T, F> e -> e.cast();
+            case Error<T, F> e -> e.cast();
         };
     }
 
+    @Contract(pure = true)
+    default Result<T, F> provideWith(Supplier<Result<T, F>> supplier) {
+        return switch (this) {
+            case Success<T, F> s -> s;
+            case Empty<T, F> ignore -> supplier.get();
+            case Error<T, F> e -> e;
+        };
+    }
+
+    @Contract(pure = true)
     default Result<T, F> recoverWith(Function<F, @NotNull Result<T, F>> fn) {
         return switch (this) {
             case Success<T, F> s -> s;
@@ -78,22 +116,13 @@ public sealed interface Result<T, F extends Failure> {
 
     default <G extends Failure> Result<T, G> flatMapError(Function<F, @NotNull Result<T, G>> fn) {
         return switch (this) {
-            case Success<T, F> s -> new Success<>(s.value());
-            case Empty<T, F> ignore -> new Empty<>();
+            case Success<T, F> s -> s.cast();
+            case Empty<T, F> e -> e.cast();
             case Error<T, F> e -> fn.apply(e.failure());
         };
     }
 
-    // !-----------------------------------------------!
-
-    default SuccessStatus<T, F> ensureSuccess(Function<F, @NotNull T> fn) {
-        return switch (this) {
-            case Success<T, F> s -> s;
-            case Empty<T, F> e -> e;
-            case Error<T, F> err -> new Success<>(fn.apply(err.failure()));
-        };
-    }
-
+    @Contract(pure = true)
     default <U> Success<U, F> foldToSuccess(
         Function<T, @NotNull U> onSuccess,
         Function<F, @NotNull U> onError,
@@ -105,12 +134,12 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    // !-----------------------------------------------!
+    // !---------------------------------------------------------------!
 
     default <R> R fold(
-        Function<T, @NotNull R> onSuccess,
-        Function<F, @NotNull R> onError,
-        Supplier<@NotNull R> onEmpty) {
+        Function<? super T, ? extends R> onSuccess,
+        Function<? super F, ? extends R> onError,
+        Supplier<? extends R> onEmpty) {
         return switch (this) {
             case Success<T, F> s -> onSuccess.apply(s.value());
             case Error<T, F> e -> onError.apply(e.failure());
@@ -118,17 +147,9 @@ public sealed interface Result<T, F extends Failure> {
         };
     }
 
-    default void handle(Runnable onSuccess, Runnable onError, Runnable onEmpty) {
-        switch (this) {
-            case Success<T, F> ignored -> onSuccess.run();
-            case Error<T, F> ignored -> onError.run();
-            case Empty<T, F> ignored -> onEmpty.run();
-        }
-    }
+    // !---------------------------------------------------------------!
 
-    // !-----------------------------------------------!
-
-    default Result<T, F> onSuccess(Consumer<T> c) {
+    default Result<T, F> onSuccess(Consumer<? super T> c) {
         if (this instanceof Success<T, F>(T value)) c.accept(value);
         return this;
     }
@@ -138,26 +159,34 @@ public sealed interface Result<T, F extends Failure> {
         return this;
     }
 
-    default Result<T, F> onError(Consumer<F> c) {
+    default Result<T, F> onError(Consumer<? super F> c) {
         if (this instanceof Error<T, F>(F failure)) c.accept(failure);
         return this;
     }
 
-    // !-----------------------------------------------!
+    // !---------------------------------------------------------------!
 
-    sealed interface SuccessStatus<T, F extends Failure> permits Success, Empty {
-        // TODO: Map to Success & Final if needed
+    record Success<T, F extends Failure>(@NotNull T value) implements Result<T, F>{
+
+        @SuppressWarnings("unchecked")
+        public <G extends Failure> Success<T, G> cast() {
+            return (Success<T, G>) this;
+        }
     }
 
-    record Success<T, F extends Failure>(@NotNull T value) implements Result<T, F>, SuccessStatus<T, F> {
+    record Empty<T, F extends Failure>() implements Result<T, F> {
 
-    }
-
-    record Empty<T, F extends Failure>() implements Result<T, F>, SuccessStatus<T, F> {
-
+        @SuppressWarnings("unchecked")
+        public <U, G extends Failure> Empty<U, G> cast() {
+            return (Empty<U, G>) this;
+        }
     }
 
     record Error<T, F extends Failure>(@NotNull F failure) implements Result<T, F> {
 
+        @SuppressWarnings("unchecked")
+        public <U> Error<U, F> cast() {
+            return (Error<U, F>) this;
+        }
     }
 }
