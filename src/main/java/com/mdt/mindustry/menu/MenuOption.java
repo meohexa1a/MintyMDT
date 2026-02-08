@@ -57,7 +57,7 @@ public record MenuOption(
         // !----------------------------------------------------------------!
 
         @SuppressWarnings("unchecked")
-        public E buttons(Button @NotNull ... buttons) {
+        public E buttons(@NotNull Button... buttons) {
             if (buttons.length > 0) this.currentRow.addAll(List.of(buttons));
             return (E) this;
         }
@@ -71,7 +71,7 @@ public record MenuOption(
         }
 
         @SuppressWarnings("unchecked")
-        public E buttonIf(boolean condition, Supplier<Button> supplier) {
+        public E buttonIf(boolean condition, Supplier<@NotNull Button> supplier) {
             if (condition) return button(supplier.get());
             return (E) this;
         }

@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@SuppressWarnings("unused")
 public sealed interface Result<T, F extends Failure> {
 
     @Contract(value = "_ -> new", pure = true)
