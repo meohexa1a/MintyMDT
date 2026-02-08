@@ -8,7 +8,7 @@ public sealed interface WorldLoadException extends Failure {
 
     }
 
-    record WorldLoadRuntimeException(Throwable cause) implements WorldLoadException {
+    record WorldLoadRuntimeException(Exception cause) implements WorldLoadException {
 
     }
 }

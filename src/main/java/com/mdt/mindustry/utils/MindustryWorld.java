@@ -68,10 +68,10 @@ public class MindustryWorld {
             else Vars.netServer.openServer();
 
             return Result.ok();
-        } catch (Throwable t) {
+        } catch (Exception e) {
             Vars.logic.reset();
             if (reloader != null) reloader.end();
-            return Result.error(new WorldLoadException.WorldLoadRuntimeException(t));
+            return Result.error(new WorldLoadException.WorldLoadRuntimeException(e));
         }
     }
 }

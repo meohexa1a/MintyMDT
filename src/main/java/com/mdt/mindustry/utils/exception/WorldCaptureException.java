@@ -14,7 +14,7 @@ public sealed interface WorldCaptureException extends Failure {
 
     }
 
-    record WorldCaptureRuntimeException(Throwable cause) implements WorldCaptureException {
+    record WorldCaptureRuntimeException(Exception cause) implements WorldCaptureException {
 
     }
 }
