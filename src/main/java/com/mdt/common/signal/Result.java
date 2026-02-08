@@ -46,8 +46,8 @@ public sealed interface Result<T, F extends Failure> {
     default <U> Result<U, F> map(Function<? super T, ? extends U> fn) {
         return switch (this) {
             case Result.Success<T, F> s -> new Success<>(fn.apply(s.value()));
-            case Empty<T, F> ignore -> new Empty<>();
-            case Error<T, F> e -> new Error<>(e.failure());
+            case Empty<T, F> e -> e.cast();
+            case Error<T, F> e -> e.cast();
         };
     }
 
@@ -81,8 +81,8 @@ public sealed interface Result<T, F extends Failure> {
     @Contract(pure = true)
     default <G extends Failure> Result<T, G> mapError(Function<? super F, ? extends G> fn) {
         return switch (this) {
-            case Success<T, F> s -> new Success<>(s.value());
-            case Empty<T, F> ignore -> new Empty<>();
+            case Success<T, F> s -> s.cast();
+            case Empty<T, F> e -> e.cast();
             case Error<T, F> e -> new Error<>(fn.apply(e.failure()));
         };
     }
@@ -92,8 +92,8 @@ public sealed interface Result<T, F extends Failure> {
     default <U> Result<U, F> flatMap(Function<? super T, @NotNull Result<U, F>> fn) {
         return switch (this) {
             case Success<T, F> s -> fn.apply(s.value());
-            case Empty<T, F> ignore -> new Empty<>();
-            case Error<T, F> e -> new Error<>(e.failure());
+            case Empty<T, F> e -> e.cast();
+            case Error<T, F> e -> e.cast();
         };
     }
 
@@ -117,8 +117,8 @@ public sealed interface Result<T, F extends Failure> {
 
     default <G extends Failure> Result<T, G> flatMapError(Function<F, @NotNull Result<T, G>> fn) {
         return switch (this) {
-            case Success<T, F> s -> new Success<>(s.value());
-            case Empty<T, F> ignore -> new Empty<>();
+            case Success<T, F> s -> s.cast();
+            case Empty<T, F> e -> e.cast();
             case Error<T, F> e -> fn.apply(e.failure());
         };
     }
@@ -168,11 +168,26 @@ public sealed interface Result<T, F extends Failure> {
     // !---------------------------------------------------------------!
 
     record Success<T, F extends Failure>(@NotNull T value) implements Result<T, F>{
+
+        @SuppressWarnings("unchecked")
+        public <G extends Failure> Success<T, G> cast() {
+            return (Success<T, G>) this;
+        }
     }
 
     record Empty<T, F extends Failure>() implements Result<T, F> {
+
+        @SuppressWarnings("unchecked")
+        public <U, G extends Failure> Empty<U, G> cast() {
+            return (Empty<U, G>) this;
+        }
     }
 
     record Error<T, F extends Failure>(@NotNull F failure) implements Result<T, F> {
+
+        @SuppressWarnings("unchecked")
+        public <U> Error<U, F> cast() {
+            return (Error<U, F>) this;
+        }
     }
 }
