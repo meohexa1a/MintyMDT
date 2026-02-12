@@ -57,7 +57,7 @@ public record MenuOption(
         // !----------------------------------------------------------------!
 
         @SuppressWarnings("unchecked")
-        public E buttons(@NotNull Button... buttons) {
+        public E buttons(@NotNull Button @NotNull ... buttons) {
             if (buttons.length > 0) this.currentRow.addAll(List.of(buttons));
             return (E) this;
         }

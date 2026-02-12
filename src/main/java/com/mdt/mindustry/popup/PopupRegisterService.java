@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 import mindustry.gen.Player;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
@@ -39,7 +40,8 @@ public final class PopupRegisterService {
     // !----------------------------------------------------------------!
 
     @Locked.Read
-    private Set<Function<Player, List<PopupContent>>> copyProviders() {
+    @Contract(" -> new")
+    private @NotNull Set<Function<Player, List<PopupContent>>> copyProviders() {
         return new HashSet<>(registered.values());
     }
 

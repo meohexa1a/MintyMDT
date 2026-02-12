@@ -59,7 +59,7 @@ public final class CommandRegisterService {
 
     // !--------------------------------------------------------!
 
-    private void registerClient(ClientCommand cmd) {
+    private void registerClient(@NotNull ClientCommand cmd) {
         for (var prefix : cmd.prefixes())
             clientHandler.<Player>register(prefix, cmd.args(), cmd.description(), (args, player) -> {
                 try {
@@ -70,7 +70,7 @@ public final class CommandRegisterService {
             });
     }
 
-    private void registerConsole(ConsoleCommand cmd) {
+    private void registerConsole(@NotNull ConsoleCommand cmd) {
         for (String prefix : cmd.prefixes())
             serverHandler.register(prefix, cmd.args(), cmd.description(), (args) -> {
                 try {

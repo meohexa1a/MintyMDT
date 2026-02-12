@@ -50,7 +50,7 @@ public final class MenuService {
 
     // !----------------------------------------------------------------!
 
-    private void handleMenuSelection(Player player, int option) {
+    private void handleMenuSelection(@NotNull Player player, int option) {
         Call.hideFollowUpMenu(player.con, menuId);
 
         var menuOption = showedMenuOption.remove(player.uuid());
@@ -68,7 +68,7 @@ public final class MenuService {
         }
     }
 
-    private void handleTextInput(Player player, String text) {
+    private void handleTextInput(@NotNull Player player, String text) {
         var menuInput = showedMenuInput.remove(player.uuid());
         if (menuInput == null) {
             log.warn("Menu input action not found/expired for player: {}", player.name);
