@@ -9,7 +9,6 @@ import com.mdt.common.type.Pair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import net.jodah.expiringmap.ExpiringMap;
@@ -23,7 +22,7 @@ import java.util.function.Consumer;
 
 @Slf4j
 @Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor
 public final class MenuService {
     private final int menuId = Menus.registerMenu(this::handleMenuSelection);
     private final int inputId = Menus.registerTextInput(this::handleTextInput);
